@@ -1,0 +1,17 @@
+{
+  "name": "friday-finance-task",
+  "version": "1.0.0",
+  "description": "Test assignment",
+  "main": "index.js",
+  "engines": {
+    "node": ">=16.0.0 <17.0.0"
+  },
+  "scripts": {
+    "start": "npm start:client && npm start:server",
+    "start:client": "cd client && npm start",
+    "start:server": "cd server && nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zakhar Gulchak <gulchak.zahar@gmail.com>",
+  "license": "ISC"
+}
