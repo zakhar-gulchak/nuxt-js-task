@@ -1,0 +1,3 @@
+FROM postgres:13-alpine
+
+ENV POSTGRES_HOST_AUTH_METHOD=trust
