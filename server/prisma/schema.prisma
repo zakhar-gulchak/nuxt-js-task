@@ -8,40 +8,40 @@ generator client {
 }
 
 model Transaction {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  amount     Int
-  reference  String   @db.VarChar(255)
-  currency   Currency @default(EUR)
-  bank       Bank     @relation(fields: [bankId], references: [id])
-  bankId     Int
-  account    Account  @relation(fields: [accountId], references: [id])
-  accountId  Int
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int
+  id         String    @id @default(uuid())
+  date       DateTime  @default(now())
+  amount     Float
+  reference  String    @db.VarChar(255)
+  currency   Currency  @default(EUR)
+  account    Account   @relation(fields: [accountId], references: [id])
+  accountId  String
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
 }
 
 model Account {
-  id           Int    @id @default(autoincrement())
-  email        String @unique
-  name         String
+  id           String @id @default(uuid())
+  name         String @db.VarChar(255)
+  bank         Bank   @relation(fields: [bankId], references: [id])
+  bankId       String
   transactions Transaction[]
 }
 
 model Category {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  title        String   @db.VarChar(255)
+  id           String    @id @default(uuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+  name         String    @db.VarChar(255) @unique
+  color        String    @db.VarChar(6)
   transactions Transaction[]
 }
 
 model Bank {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  name         String   @db.VarChar(255)
-  transactions Transaction[]
+  id           String    @id @default(uuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+  name         String    @db.VarChar(255) @unique
+  accounts     Account[]
 }
 
 enum Currency {
