@@ -1,0 +1,86 @@
+type Query {
+  transactions: [Transaction]
+  accounts: [Account]
+  banks: [Bank]
+  categories: [Category]
+}
+
+type Transaction {
+  id: ID!
+  date: DateTime!
+  amount: Float!
+  reference: String!
+  currency: Currency!
+  account: Account!
+  category: Category
+}
+
+type Account {
+  id: ID!
+  name: String!
+  bank: Bank!
+}
+
+type Bank {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+type Category {
+  id: ID!
+  name: String!
+  color: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+interface MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+}
+
+type AddBankMutationResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  bank: Bank
+}
+
+type AddCategoryMutationResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  category: Category
+}
+
+type AddAccountMutationResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  account: Account
+}
+
+type AddTransactionMutationResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  transaction: Transaction
+}
+
+type Mutation {
+  addBank(name: String): AddBankMutationResponse
+  addCategory(name: String, color: String): AddCategoryMutationResponse
+  addAccount(name: String, bankId: ID): AddAccountMutationResponse
+  addTransaction(amount: Float, reference: String, currency: Currency, account: ID, category: ID): AddTransactionMutationResponse
+}
+
+enum Currency {
+  EUR
+  USD
+  GBP
+}
+
+scalar DateTime
