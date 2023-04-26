@@ -77,9 +77,8 @@ async function main() {
       })
       console.log(row.id)
     }
-    console.log('End of seeding')
+    console.log('End of seeding - all transactions imported')
   })
-  console.log('Seeded database')
 }
 
 main()
