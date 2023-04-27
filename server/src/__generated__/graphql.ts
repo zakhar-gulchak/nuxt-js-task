@@ -1,10 +1,12 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { Account, Bank, Transaction } from '.prisma/client';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -17,7 +19,7 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
-  bank: Bank;
+  bank?: Maybe<Bank>;
   id: Scalars['ID'];
   name: Scalars['String'];
 };
@@ -71,11 +73,10 @@ export type Category = {
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
-export enum Currency {
-  Eur = 'EUR',
-  Gbp = 'GBP',
-  Usd = 'USD'
-}
+export type Currency =
+  | 'EUR'
+  | 'GBP'
+  | 'USD';
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -127,7 +128,7 @@ export type Query = {
 
 export type Transaction = {
   __typename?: 'Transaction';
-  account: Account;
+  account?: Maybe<Account>;
   amount: Scalars['Float'];
   category?: Maybe<Category>;
   currency: Currency;
@@ -208,10 +209,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Account: ResolverTypeWrapper<Account>;
-  AddAccountMutationResponse: ResolverTypeWrapper<AddAccountMutationResponse>;
-  AddBankMutationResponse: ResolverTypeWrapper<AddBankMutationResponse>;
+  AddAccountMutationResponse: ResolverTypeWrapper<Omit<AddAccountMutationResponse, 'account'> & { account?: Maybe<ResolversTypes['Account']> }>;
+  AddBankMutationResponse: ResolverTypeWrapper<Omit<AddBankMutationResponse, 'bank'> & { bank?: Maybe<ResolversTypes['Bank']> }>;
   AddCategoryMutationResponse: ResolverTypeWrapper<AddCategoryMutationResponse>;
-  AddTransactionMutationResponse: ResolverTypeWrapper<AddTransactionMutationResponse>;
+  AddTransactionMutationResponse: ResolverTypeWrapper<Omit<AddTransactionMutationResponse, 'transaction'> & { transaction?: Maybe<ResolversTypes['Transaction']> }>;
   Bank: ResolverTypeWrapper<Bank>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Category>;
@@ -223,16 +224,16 @@ export type ResolversTypes = {
   MutationResponse: ResolversTypes['AddAccountMutationResponse'] | ResolversTypes['AddBankMutationResponse'] | ResolversTypes['AddCategoryMutationResponse'] | ResolversTypes['AddTransactionMutationResponse'];
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
-  Transaction: ResolverTypeWrapper<Transaction>;
+  Transaction: ResolverTypeWrapper<Omit<Transaction, 'account'> & { account?: Maybe<ResolversTypes['Account']> }>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Account: Account;
-  AddAccountMutationResponse: AddAccountMutationResponse;
-  AddBankMutationResponse: AddBankMutationResponse;
+  AddAccountMutationResponse: Omit<AddAccountMutationResponse, 'account'> & { account?: Maybe<ResolversParentTypes['Account']> };
+  AddBankMutationResponse: Omit<AddBankMutationResponse, 'bank'> & { bank?: Maybe<ResolversParentTypes['Bank']> };
   AddCategoryMutationResponse: AddCategoryMutationResponse;
-  AddTransactionMutationResponse: AddTransactionMutationResponse;
+  AddTransactionMutationResponse: Omit<AddTransactionMutationResponse, 'transaction'> & { transaction?: Maybe<ResolversParentTypes['Transaction']> };
   Bank: Bank;
   Boolean: Scalars['Boolean'];
   Category: Category;
@@ -243,11 +244,11 @@ export type ResolversParentTypes = {
   MutationResponse: ResolversParentTypes['AddAccountMutationResponse'] | ResolversParentTypes['AddBankMutationResponse'] | ResolversParentTypes['AddCategoryMutationResponse'] | ResolversParentTypes['AddTransactionMutationResponse'];
   Query: {};
   String: Scalars['String'];
-  Transaction: Transaction;
+  Transaction: Omit<Transaction, 'account'> & { account?: Maybe<ResolversParentTypes['Account']> };
 };
 
 export type AccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account']> = {
-  bank?: Resolver<ResolversTypes['Bank'], ParentType, ContextType>;
+  bank?: Resolver<Maybe<ResolversTypes['Bank']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -328,7 +329,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type TransactionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Transaction'] = ResolversParentTypes['Transaction']> = {
-  account?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
+  account?: Resolver<Maybe<ResolversTypes['Account']>, ParentType, ContextType>;
   amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
   currency?: Resolver<ResolversTypes['Currency'], ParentType, ContextType>;

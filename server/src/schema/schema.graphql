@@ -11,14 +11,14 @@ type Transaction {
   amount: Float!
   reference: String!
   currency: Currency!
-  account: Account!
+  account: Account
   category: Category
 }
 
 type Account {
   id: ID!
   name: String!
-  bank: Bank!
+  bank: Bank
 }
 
 type Bank {
