@@ -6,7 +6,7 @@ const resolvers: Resolvers = {
   Query: {
     transactions: () => context.prisma.transaction.findMany(),
     accounts: () => context.prisma.account.findMany(),
-    banks: () => context.prisma.account.findMany(),
+    banks: () => context.prisma.bank.findMany(),
     categories: () => context.prisma.category.findMany(),
   },
   // Mutation: {
@@ -26,15 +26,22 @@ const resolvers: Resolvers = {
   //     })
   //   },
   // },
-  // Account: {
-  //   bank: (parent, _args: { id: number }, context: Context) => {
-  //     return context.prisma.account
-  //       .findUnique({
-  //         where: {id: parent?.id},
-  //       })
-  //       .bank()
-  //   }
-  // }
+  Account: {
+    bank: (parent, _args, context: Context) => {
+      return context.prisma.bank
+        .findUnique({
+          where: {id: parent?.bankId},
+        })
+    }
+  },
+  Transaction: {
+    account: (parent, _args, context: Context) => {
+      return context.prisma.account
+        .findUnique({
+          where: {id: parent?.accountId},
+        })
+    }
+  }
 };
 
 export default resolvers;

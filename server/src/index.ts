@@ -9,6 +9,7 @@ const start = async () => {
   const server = new ApolloServer<Context>({
     typeDefs: readFileSync('./src/schema/schema.graphql', { encoding: 'utf-8' }),
     resolvers,
+    introspection: process.env.NODE_ENV !== 'production'
   });
 
   const { url } = await startStandaloneServer(server, {
