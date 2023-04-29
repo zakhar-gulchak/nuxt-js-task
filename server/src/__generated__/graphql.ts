@@ -7,6 +7,7 @@ export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K]
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -126,6 +127,12 @@ export type Query = {
   transactions?: Maybe<Array<Maybe<Transaction>>>;
 };
 
+
+export type QueryTransactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
 export type Transaction = {
   __typename?: 'Transaction';
   account?: Maybe<Account>;
@@ -220,11 +227,12 @@ export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
   MutationResponse: ResolversTypes['AddAccountMutationResponse'] | ResolversTypes['AddBankMutationResponse'] | ResolversTypes['AddCategoryMutationResponse'] | ResolversTypes['AddTransactionMutationResponse'];
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
-  Transaction: ResolverTypeWrapper<Omit<Transaction, 'account'> & { account?: Maybe<ResolversTypes['Account']> }>;
+  Transaction: ResolverTypeWrapper<Transaction>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -240,11 +248,12 @@ export type ResolversParentTypes = {
   DateTime: Scalars['DateTime'];
   Float: Scalars['Float'];
   ID: Scalars['ID'];
+  Int: Scalars['Int'];
   Mutation: {};
   MutationResponse: ResolversParentTypes['AddAccountMutationResponse'] | ResolversParentTypes['AddBankMutationResponse'] | ResolversParentTypes['AddCategoryMutationResponse'] | ResolversParentTypes['AddTransactionMutationResponse'];
   Query: {};
   String: Scalars['String'];
-  Transaction: Omit<Transaction, 'account'> & { account?: Maybe<ResolversParentTypes['Account']> };
+  Transaction: Transaction;
 };
 
 export type AccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account']> = {
@@ -325,7 +334,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   accounts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Account']>>>, ParentType, ContextType>;
   banks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Bank']>>>, ParentType, ContextType>;
   categories?: Resolver<Maybe<Array<Maybe<ResolversTypes['Category']>>>, ParentType, ContextType>;
-  transactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Transaction']>>>, ParentType, ContextType>;
+  transactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Transaction']>>>, ParentType, ContextType, RequireFields<QueryTransactionsArgs, 'limit' | 'offset'>>;
 };
 
 export type TransactionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Transaction'] = ResolversParentTypes['Transaction']> = {

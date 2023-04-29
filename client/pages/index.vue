@@ -26,7 +26,7 @@
         <div class="table-header-item">Amount</div>
       </div>
       <div class="table-data">
-        <div class="table-data-item" v-for="item in items">
+        <div class="table-data-item" v-for="item in transactions" :key="item.id">
           <div><nuxt-link :to="`/transactions/${item.id}`">{{ item.reference }}</nuxt-link></div>
           <div>{{ item.category }}</div>
           <div>{{ item.date }}</div>
@@ -39,21 +39,16 @@
 </template>
 
 <script>
+import { getTransactions } from '~/apollo/queries/transactions.gql'
+
 export default {
-  data() {
-    return {
-      items: [{
-        id: 13,
-        reference: '123',
-        category: 'Food',
-        date: '2020-01-01',
-        amount: 100
-      }]
+  apollo: {
+    transactions: {
+      prefetch: true,
+      query: getTransactions,
     }
   }
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

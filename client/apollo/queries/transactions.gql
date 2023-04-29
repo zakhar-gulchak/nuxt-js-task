@@ -1,0 +1,17 @@
+query getTransactions($offset: Int, $limit: Int) {
+  transactions(offset: $offset, limit: $limit) {
+    amount
+    reference
+    category {
+      name
+    }
+    date
+    account {
+      id
+      name
+      bank {
+        id
+      }
+    }
+  }
+}

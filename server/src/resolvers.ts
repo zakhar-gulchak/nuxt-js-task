@@ -4,7 +4,10 @@ import { Resolvers } from './__generated__/graphql';
 
 const resolvers: Resolvers = {
   Query: {
-    transactions: () => context.prisma.transaction.findMany(),
+    transactions: (_parent, { offset, limit }) => context.prisma.transaction.findMany({
+      skip: offset,
+      take: limit,
+    }),
     accounts: () => context.prisma.account.findMany(),
     banks: () => context.prisma.bank.findMany(),
     categories: () => context.prisma.category.findMany(),

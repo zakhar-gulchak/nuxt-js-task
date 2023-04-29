@@ -1,5 +1,5 @@
 type Query {
-  transactions: [Transaction]
+  transactions (offset: Int = 0, limit: Int = 200): [Transaction]
   accounts: [Account]
   banks: [Bank]
   categories: [Category]
