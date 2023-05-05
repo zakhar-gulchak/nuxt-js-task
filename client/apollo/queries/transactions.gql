@@ -1,9 +1,11 @@
 query getTransactions($offset: Int, $limit: Int) {
   transactions(offset: $offset, limit: $limit) {
     amount
+    currency
     reference
     category {
       name
+      color
     }
     date
     account {
