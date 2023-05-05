@@ -7,6 +7,10 @@ const resolvers: Resolvers = {
     transactions: (_parent, { offset, limit }) => context.prisma.transaction.findMany({
       skip: offset,
       take: limit,
+      include: {
+        account: true,
+        category: true
+      }
     }),
     accounts: () => context.prisma.account.findMany(),
     banks: () => context.prisma.bank.findMany(),
@@ -33,18 +37,24 @@ const resolvers: Resolvers = {
     bank: (parent, _args, context: Context) => {
       return context.prisma.bank
         .findUnique({
-          where: {id: parent?.bankId},
+          where: { id: parent?.bankId },
         })
     }
   },
-  Transaction: {
-    account: (parent, _args, context: Context) => {
-      return context.prisma.account
-        .findUnique({
-          where: {id: parent?.accountId},
-        })
-    }
-  }
+  // Transaction: {
+  //   account: (parent, _args, context: Context) => {
+  //     return context.prisma.account
+  //       .findUnique({
+  //         where: { id: parent?.accountId },
+  //       })
+  //   },
+  //   category: (parent, _args, context: Context) => {
+  //     return context.prisma.category
+  //       .findUnique({
+  //         where: { id: parent?.categoryId },
+  //       })
+  //   }
+  // }
 };
 
 export default resolvers;
