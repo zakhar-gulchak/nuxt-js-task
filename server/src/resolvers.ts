@@ -4,13 +4,18 @@ import { Resolvers } from './__generated__/graphql';
 
 const resolvers: Resolvers = {
   Query: {
-    transactions: (_parent, { offset, limit }) => context.prisma.transaction.findMany({
+    transactions: (_parent, { offset, limit, sortBy, sortOrder }) => context.prisma.transaction.findMany({
       skip: offset,
       take: limit,
       include: {
         account: true,
         category: true
-      }
+      },
+      ...(sortBy ? {
+        orderBy: {
+          [sortBy]: sortOrder
+        }
+      } : {}),
     }),
     accounts: () => context.prisma.account.findMany(),
     banks: () => context.prisma.bank.findMany(),

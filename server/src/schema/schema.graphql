@@ -1,5 +1,5 @@
 type Query {
-  transactions (offset: Int = 0, limit: Int = 200): [Transaction]
+  transactions (offset: Int = 0, limit: Int = 200, sortBy: String, sortOrder: Sort): [Transaction]
   accounts: [Account]
   banks: [Bank]
   categories: [Category]
@@ -81,6 +81,11 @@ enum Currency {
   EUR
   USD
   GBP
+}
+
+enum Sort {
+  ASC
+  DESC
 }
 
 scalar DateTime
