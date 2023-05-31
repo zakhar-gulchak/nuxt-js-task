@@ -1,5 +1,6 @@
-query getTransactions($offset: Int, $limit: Int) {
-  transactions(offset: $offset, limit: $limit) {
+query getTransactions($cursorId: String, $limit: Int, $sortBy: String, $sortOrder: Sort) {
+  transactions(cursorId: $cursorId, limit: $limit, sortBy: $sortBy, sortOrder: $sortOrder) {
+    id
     amount
     currency
     reference
@@ -16,4 +17,7 @@ query getTransactions($offset: Int, $limit: Int) {
       }
     }
   }
+}
+query getTransactionsCount {
+  totalTransactionsCount
 }

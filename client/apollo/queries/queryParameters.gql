@@ -1,0 +1,10 @@
+query getQueryParameters {
+  queryParameters @client {
+    sortBy
+    sortOrder
+  }
+}
+
+mutation setQueryParameters ($sortBy: String!, $sortOrder: String!) {
+  queryParametersSet (sortBy: $sortBy, sortOrder: $sortOrder) @client
+}

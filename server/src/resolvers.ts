@@ -1,25 +1,45 @@
 import { context, Context } from './context';
-
 import { Resolvers } from './__generated__/graphql';
 
 const resolvers: Resolvers = {
   Query: {
-    transactions: (_parent, { offset, limit, sortBy, sortOrder }) => context.prisma.transaction.findMany({
-      skip: offset,
-      take: limit,
-      include: {
-        account: true,
-        category: true
-      },
-      ...(sortBy ? {
-        orderBy: {
-          [sortBy]: sortOrder
+    transactions: (_parent, { cursorId, limit, sortBy, sortOrder }) => {
+      const where = {}
+      let orderBy = {}
+      if (sortBy === 'category') {
+        orderBy = {
+          category: {
+            name: sortOrder
+          }
         }
-      } : {}),
-    }),
-    accounts: () => context.prisma.account.findMany(),
+      } else if (sortBy) {
+        orderBy = {
+            [sortBy]: sortOrder
+        }
+      }
+
+      return context.prisma.transaction.findMany({
+        take: limit,
+        skip: 1,
+        ...(cursorId ? { cursor: {
+            id: cursorId,
+          }} : {}),
+        where,
+        include: {
+          account: true,
+          category: true
+        },
+        orderBy
+      });
+    },
+    accounts: () => context.prisma.account.findMany({ include: { bank: true }}),
     banks: () => context.prisma.bank.findMany(),
     categories: () => context.prisma.category.findMany(),
+    totalTransactionsCount: () => {
+      const where = {};
+
+      return context.prisma.transaction.count({ where });
+    },
   },
   // Mutation: {
   //   addTransaction: (

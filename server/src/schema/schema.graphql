@@ -1,8 +1,9 @@
 type Query {
-  transactions (offset: Int = 0, limit: Int = 200, sortBy: String, sortOrder: Sort): [Transaction]
-  accounts: [Account]
-  banks: [Bank]
-  categories: [Category]
+  transactions (cursorId: String, limit: Int = 200, sortBy: String, sortOrder: Sort): [Transaction!]!
+  totalTransactionsCount: Int!
+  accounts: [Account!]!
+  banks: [Bank!]!
+  categories: [Category!]!
 }
 
 type Transaction {
@@ -84,8 +85,8 @@ enum Currency {
 }
 
 enum Sort {
-  ASC
-  DESC
+  asc
+  desc
 }
 
 scalar DateTime

@@ -121,19 +121,24 @@ export type MutationResponse = {
 
 export type Query = {
   __typename?: 'Query';
-  accounts?: Maybe<Array<Maybe<Account>>>;
-  banks?: Maybe<Array<Maybe<Bank>>>;
-  categories?: Maybe<Array<Maybe<Category>>>;
-  transactions?: Maybe<Array<Maybe<Transaction>>>;
+  accounts: Array<Account>;
+  banks: Array<Bank>;
+  categories: Array<Category>;
+  totalTransactionsCount: Scalars['Int'];
+  transactions: Array<Transaction>;
 };
 
 
 export type QueryTransactionsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
   limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
   sortBy?: InputMaybe<Scalars['String']>;
-  sortOrder?: InputMaybe<Scalars['String']>;
+  sortOrder?: InputMaybe<Sort>;
 };
+
+export type Sort =
+  | 'asc'
+  | 'desc';
 
 export type Transaction = {
   __typename?: 'Transaction';
@@ -233,6 +238,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   MutationResponse: ResolversTypes['AddAccountMutationResponse'] | ResolversTypes['AddBankMutationResponse'] | ResolversTypes['AddCategoryMutationResponse'] | ResolversTypes['AddTransactionMutationResponse'];
   Query: ResolverTypeWrapper<{}>;
+  Sort: Sort;
   String: ResolverTypeWrapper<Scalars['String']>;
   Transaction: ResolverTypeWrapper<Transaction>;
 };
@@ -333,10 +339,11 @@ export type MutationResponseResolvers<ContextType = any, ParentType extends Reso
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  accounts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Account']>>>, ParentType, ContextType>;
-  banks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Bank']>>>, ParentType, ContextType>;
-  categories?: Resolver<Maybe<Array<Maybe<ResolversTypes['Category']>>>, ParentType, ContextType>;
-  transactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Transaction']>>>, ParentType, ContextType, RequireFields<QueryTransactionsArgs, 'limit' | 'offset'>>;
+  accounts?: Resolver<Array<ResolversTypes['Account']>, ParentType, ContextType>;
+  banks?: Resolver<Array<ResolversTypes['Bank']>, ParentType, ContextType>;
+  categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
+  totalTransactionsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  transactions?: Resolver<Array<ResolversTypes['Transaction']>, ParentType, ContextType, RequireFields<QueryTransactionsArgs, 'limit'>>;
 };
 
 export type TransactionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Transaction'] = ResolversParentTypes['Transaction']> = {
