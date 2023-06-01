@@ -1,0 +1,6 @@
+query getBanks {
+  banks {
+    id
+    name
+  }
+}

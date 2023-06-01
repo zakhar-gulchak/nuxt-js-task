@@ -1,7 +1,7 @@
 import { getQueryParameters } from '~/apollo/queries/queryParameters.gql'
 
 export default function () {
-  const LOCAL_STORAGE_DATA_KEY = 'ff-app_sortOrder'
+  const LOCAL_STORAGE_DATA_KEY = 'ff-app_queryParameters'
 
   return {
     httpEndpoint: process.env.API_URL || 'http://localhost:4000/graphql',

@@ -32,7 +32,12 @@ const resolvers: Resolvers = {
         orderBy
       });
     },
-    accounts: () => context.prisma.account.findMany({ include: { bank: true }}),
+    accounts: (_parent, { bankId }) => {
+      const where = {
+        ...(bankId ?  { bankId } : {})
+      };
+      return context.prisma.account.findMany({ include: { bank: true }, where })
+    },
     banks: () => context.prisma.bank.findMany(),
     categories: () => context.prisma.category.findMany(),
     totalTransactionsCount: () => {

@@ -129,6 +129,11 @@ export type Query = {
 };
 
 
+export type QueryAccountsArgs = {
+  bankId: Scalars['String'];
+};
+
+
 export type QueryTransactionsArgs = {
   cursorId?: InputMaybe<Scalars['String']>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -339,7 +344,7 @@ export type MutationResponseResolvers<ContextType = any, ParentType extends Reso
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  accounts?: Resolver<Array<ResolversTypes['Account']>, ParentType, ContextType>;
+  accounts?: Resolver<Array<ResolversTypes['Account']>, ParentType, ContextType, RequireFields<QueryAccountsArgs, 'bankId'>>;
   banks?: Resolver<Array<ResolversTypes['Bank']>, ParentType, ContextType>;
   categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
   totalTransactionsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;

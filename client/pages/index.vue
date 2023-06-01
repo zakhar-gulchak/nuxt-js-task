@@ -1,7 +1,7 @@
 <template>
   <HomeLayout>
     <Header title="Transactions"/>
-    <FilterBar />
+    <FilterBar :accounts="accounts" :reset-account-label="resetAccountLabel" :banks="banks" :filters-change="filtersChange"/>
     <div class="relative">
       <table class="table-fixed w-full">
         <thead class="table-header-group">
@@ -75,6 +75,8 @@ import FilterBar from '@/components/molecules/FilterBar.vue'
 import HomeLayout from '@/components/templates/HomeLayout.vue'
 import Header from '@/components/molecules/Header.vue';
 import { getTransactions, getTransactionsCount } from '~/apollo/queries/transactions.gql'
+import { getAccounts } from '~/apollo/queries/accounts.gql'
+import { getBanks } from '~/apollo/queries/banks.gql'
 import { getQueryParameters, setQueryParameters } from '~/apollo/queries/queryParameters.gql'
 
 export default {
@@ -91,9 +93,11 @@ export default {
       query: getTransactions,
       variables () {
         return {
-          // cursorId: this.cursorId,
+          bankId: this.selectedBankId,
+          accountId: this.selectedAccountId,
           sortBy: this.queryParameters.sortBy,
           sortOrder: this.queryParameters.sortOrder,
+          search: this.searchText,
         };
       },
       result ({ data }) {
@@ -107,9 +111,34 @@ export default {
       },
       // fetchPolicy: 'cache-and-network',
     },
+    accounts: {
+      prefetch: false,
+      query: getAccounts,
+      skip() {
+        return !this.selectedBankId;
+      },
+      variables() {
+        return {
+          bankId: this.selectedBankId
+        };
+      },
+    },
+    banks: () => {
+      return {
+        prefetch: true,
+        query: getBanks,
+      };
+    },
     totalTransactionsCount: {
       prefetch: false,
       query: getTransactionsCount,
+      variables() {
+        return {
+          bankId: this.selectedBankId,
+          accountId: this.queryParameters.accountId,
+          search: this.queryParameters.search,
+        };
+      }
     },
     queryParameters: {
       query: getQueryParameters,
@@ -142,6 +171,13 @@ export default {
           }
         }
       },
+      accounts: [],
+      banks: [],
+      selectedBankId: null,
+      selectedAccountId: '',
+      resetAccountLabel: false,
+      searchText: '',
+      totalTransactionsCount: 0,
       isClient: false,
       observer: null,
       cursorId: null,
@@ -178,7 +214,19 @@ export default {
           sortOrder,
         }
       })
-    }
+    },
+    filtersChange(diff) {
+      if (diff.bankId) {
+        this.selectedBankId = diff.bankId;
+        this.selectedAccountId = '';
+        this.resetAccountLabel = true; // trigger account dropdown label clearance
+      } else if (diff.accountId) {
+        this.selectedAccountId = diff.accountId;
+        this.resetAccountLabel = false; // to make possible triggering it back
+      } else if (diff.search) {
+        this.searchText = diff.search;
+      }
+    },
   }
 }
 </script>
