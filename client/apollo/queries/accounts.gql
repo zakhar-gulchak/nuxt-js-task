@@ -1,6 +1,9 @@
-query getAccounts($bankId: String!) {
+query getAccounts($bankId: ID) {
   accounts(bankId: $bankId) {
     id
     name
+    bank {
+      id
+    }
   }
 }

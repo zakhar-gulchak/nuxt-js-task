@@ -1,7 +1,7 @@
 type Query {
-  transactions (cursorId: String, limit: Int = 200, sortBy: String, sortOrder: Sort): [Transaction!]!
-  totalTransactionsCount: Int!
-  accounts (bankId: String!): [Account!]!
+  transactions (cursorId: ID, limit: Int = 200, sortBy: String, sortOrder: Sort, accountId: ID, bankId: ID, search: String): [Transaction!]!
+  totalTransactionsCount(accountId: ID, search: String): Int!
+  accounts (bankId: ID): [Account!]!
   banks: [Bank!]!
   categories: [Category!]!
 }

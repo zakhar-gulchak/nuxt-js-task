@@ -3,8 +3,13 @@ import { Resolvers } from './__generated__/graphql';
 
 const resolvers: Resolvers = {
   Query: {
-    transactions: (_parent, { cursorId, limit, sortBy, sortOrder }) => {
-      const where = {}
+    transactions: (_parent, { cursorId, limit, sortBy, sortOrder, accountId, search }) => {
+      const where = {
+        ...(accountId ?  { accountId } : {}),
+        ...(search ? { reference: {
+          contains: search
+        } } : {})
+      }
       let orderBy = {}
       if (sortBy === 'category') {
         orderBy = {
@@ -40,8 +45,13 @@ const resolvers: Resolvers = {
     },
     banks: () => context.prisma.bank.findMany(),
     categories: () => context.prisma.category.findMany(),
-    totalTransactionsCount: () => {
-      const where = {};
+    totalTransactionsCount: (_parent, { accountId, search}) => {
+      const where = {
+        ...(accountId ?  { accountId } : {}),
+        ...(search ? { reference: {
+            contains: search
+          } } : {})
+      }
 
       return context.prisma.transaction.count({ where });
     },

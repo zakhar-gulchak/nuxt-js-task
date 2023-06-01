@@ -91,16 +91,15 @@ export default {
     transactions: {
       prefetch: false,
       query: getTransactions,
-      variables () {
+      variables() {
         return {
-          bankId: this.selectedBankId,
           accountId: this.selectedAccountId,
           sortBy: this.queryParameters.sortBy,
           sortOrder: this.queryParameters.sortOrder,
           search: this.searchText,
         };
       },
-      result ({ data }) {
+      result({ data }) {
         if (this.isClient) {
           this.cursorId = data.transactions.at(-1).id;
           nextTick(() => {
@@ -109,7 +108,6 @@ export default {
           })
         }
       },
-      // fetchPolicy: 'cache-and-network',
     },
     accounts: {
       prefetch: false,
@@ -130,11 +128,10 @@ export default {
       };
     },
     totalTransactionsCount: {
-      prefetch: false,
+      prefetch: true,
       query: getTransactionsCount,
       variables() {
         return {
-          bankId: this.selectedBankId,
           accountId: this.queryParameters.accountId,
           search: this.queryParameters.search,
         };
@@ -148,51 +145,46 @@ export default {
   data() {
     return {
       format,
-      intersectionCallback: (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            if (this.transactions.length < this.totalTransactionsCount && this.cursorId !== this.lastCursorId) {
-              this.$apollo.queries.transactions.fetchMore({
-                variables: {
-                  cursorId: this.cursorId,
-                  sortBy: this.queryParameters.sortBy,
-                  sortOrder: this.queryParameters.sortOrder,
-                },
-                updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) return prev;
-
-                  return Object.assign({}, prev, {
-                    transactions: [...prev.transactions, ...fetchMoreResult.transactions]
-                  });
-                },
-              });
-              this.lastCursorId = this.cursorId;
-            }
-          }
-        }
-      },
       accounts: [],
       banks: [],
       selectedBankId: null,
-      selectedAccountId: '',
+      selectedAccountId: null,
       resetAccountLabel: false,
       searchText: '',
       totalTransactionsCount: 0,
       isClient: false,
       observer: null,
       cursorId: null,
-      lastCursorId: null,
+      previousCursorId: null,
       queryParameters: {},
+      intersectionCallback: (entries) => {
+        if (entries[0].isIntersecting && this.transactions.length < this.totalTransactionsCount && this.cursorId !== this.previousCursorId) {
+          this.$apollo.queries.transactions.fetchMore({
+            variables: {
+              cursorId: this.cursorId,
+              sortBy: this.queryParameters.sortBy,
+              sortOrder: this.queryParameters.sortOrder,
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (!fetchMoreResult) return prev;
+
+              return Object.assign({}, prev, {
+                transactions: [...prev.transactions, ...fetchMoreResult.transactions]
+              });
+            },
+          });
+          this.previousCursorId = this.cursorId;
+        }
+      },
     }
   },
   mounted() {
     this.isClient = true;
-    let options = {
+    this.observer = new IntersectionObserver(this.intersectionCallback, {
       root: null,
       rootMargin: "0px",
       threshold: 0.5,
-    };
-    this.observer = new IntersectionObserver(this.intersectionCallback, options);
+    });
   },
   beforeDestroy() {
     this.observer.disconnect();
@@ -206,7 +198,6 @@ export default {
       } else {
         sortOrder = 'asc';
       }
-
       this.$apollo.mutate({
         mutation: setQueryParameters,
         variables: {
@@ -218,7 +209,7 @@ export default {
     filtersChange(diff) {
       if (diff.bankId) {
         this.selectedBankId = diff.bankId;
-        this.selectedAccountId = '';
+        this.selectedAccountId = null;
         this.resetAccountLabel = true; // trigger account dropdown label clearance
       } else if (diff.accountId) {
         this.selectedAccountId = diff.accountId;
