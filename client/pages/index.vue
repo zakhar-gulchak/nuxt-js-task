@@ -1,7 +1,7 @@
 <template>
   <HomeLayout>
     <Header title="Transactions"/>
-    <FilterBar :accounts="accounts" :reset-account-label="resetAccountLabel" :banks="banks" :filters-change="filtersChange"/>
+    <FilterBar :accounts="accounts" :reset-account-label="resetAccountLabel" :banks="banks" :selected-bank-id="selectedBankId" :selected-account-id="selectedAccountId" :filters-change="filtersChange"/>
     <div class="relative">
       <table class="table-fixed w-full">
         <thead class="table-header-group">
@@ -100,7 +100,7 @@ export default {
         };
       },
       result({ data }) {
-        if (this.isClient) {
+        if (this.isClient && data.transactions.length > 0) {
           this.cursorId = data.transactions.at(-1).id;
           nextTick(() => {
             this.observer?.disconnect();
@@ -117,9 +117,6 @@ export default {
         return {
           bankId: this.selectedBankId
         };
-      },
-      skip() {
-        return !this.skipAccountsRefetching;
       }
     },
     banks: () => {
@@ -150,7 +147,6 @@ export default {
       banks: [],
       selectedBankId: null,
       selectedAccountId: null,
-      skipAccountsRefetching: false,
       resetAccountLabel: false,
       searchText: '',
       totalTransactionsCount: 0,
@@ -211,7 +207,6 @@ export default {
     filtersChange(key, value) {
       switch (key) {
         case 'bankId':
-          this.skipAccountsRefetching = false;
           this.selectedBankId = value;
           this.selectedAccountId = null;
           this.resetAccountLabel = true; // trigger account dropdown label clearance
@@ -220,7 +215,6 @@ export default {
           this.selectedAccountId = value;
           this.resetAccountLabel = false; // to make possible triggering it back
           if (!this.selectedBankId) {
-            this.skipAccountsRefetching = true;
             this.selectedBankId = this.accounts.find(account => account.id === value).bank.id;
           }
           break;

@@ -14,10 +14,10 @@
         </div>
       </div>
       <div class="md:col-span-2">
-        <Dropdown label="Bank" :values="banks" field-name="name" placeholder="No filter applied" :on-select="(val) => filtersChange('bankId', val)"/>
+        <Dropdown label="Bank" :values="banks" :selected-value-ext="selectedBankId" field-name="name" placeholder="No filter applied" :on-select="(val) => filtersChange('bankId', val)"/>
       </div>
       <div class="md:col-span-2">
-        <Dropdown label="Account" :values="accounts" :reset-value-label="resetAccountLabel" field-name="name" placeholder="No filter applied" :on-select="(val) => filtersChange('accountId', val)"/>
+        <Dropdown label="Account" :values="accounts" :selected-value-ext="selectedAccountId" field-name="name" placeholder="No filter applied" :on-select="(val) => filtersChange('accountId', val)"/>
       </div>
       <div>
         <label for="starting_month" class="block mb-2 text-xs font-light text-gray-900 dark:text-white">Start</label>
@@ -55,6 +55,8 @@ export default defineComponent({
     banks: { type: Array, required: true },
     filtersChange: { type: Function, required: true },
     resetAccountLabel: { type: Boolean, required: true },
+    selectedAccountId: String,
+    selectedBankId: String,
   },
   components: { Dropdown },
   setup(props) {

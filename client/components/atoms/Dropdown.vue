@@ -36,7 +36,7 @@ export default defineComponent({
     values: { type: Array, required: true },
     fieldName: { type: String, required: true },
     placeholder: String,
-    resetValueLabel: Boolean,
+    selectedValueExt: String,
     onSelect: { type: Function, required: true }
   },
   setup(props) {
@@ -68,9 +68,10 @@ export default defineComponent({
     },
   },
   watch: {
-    resetValueLabel(val) {
-      if (val) {
-        this.selectedValue = '';
+    selectedValueExt(id) {
+      const value = id ? this.values.find(value => value.id === id)[this.fieldName] : '';
+      if (value !== this.selectedValue) {
+        this.selectedValue = value;
       }
     }
   }
