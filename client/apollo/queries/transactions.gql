@@ -1,5 +1,5 @@
-query getTransactions($cursorId: ID, $limit: Int, $sortBy: String, $sortOrder: Sort, $bankId: ID, $accountId: ID, $search: String) {
-  transactions(cursorId: $cursorId, limit: $limit, sortBy: $sortBy, sortOrder: $sortOrder, bankId: $bankId, accountId: $accountId, search: $search) {
+query getTransactions($cursorId: ID, $limit: Int, $sortBy: String, $sortOrder: Sort, $bankId: ID, $accountId: ID, $search: String, $dateFrom: DateTime, $dateTo: DateTime) {
+  transactions(transactionsInput: { cursorId: $cursorId, limit: $limit, sortBy: $sortBy, sortOrder: $sortOrder, bankId: $bankId, accountId: $accountId, search: $search, dateFrom: $dateFrom, dateTo: $dateTo }) {
     id
     amount
     currency
@@ -18,6 +18,6 @@ query getTransactions($cursorId: ID, $limit: Int, $sortBy: String, $sortOrder: S
     }
   }
 }
-query getTransactionsCount($accountId: ID, $search: String) {
-  totalTransactionsCount(accountId: $accountId, search: $search)
+query getTransactionsCount($accountId: ID, $search: String, $dateFrom: DateTime, $dateTo: DateTime) {
+  totalTransactionsCount(accountId: $accountId, search: $search, dateFrom: $dateFrom, dateTo: $dateTo)
 }

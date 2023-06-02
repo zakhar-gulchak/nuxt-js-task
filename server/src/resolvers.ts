@@ -3,32 +3,24 @@ import { Resolvers } from './__generated__/graphql';
 
 const resolvers: Resolvers = {
   Query: {
-    transactions: (_parent, { cursorId, limit, sortBy, sortOrder, accountId, search }) => {
+    transactions: (_parent, { transactionsInput: { cursorId, limit, sortBy, sortOrder, accountId, search, dateFrom, dateTo } }) => {
       const where = {
         ...(accountId ?  { accountId } : {}),
-        ...(search ? { reference: {
-          contains: search
-        } } : {})
+        ...(search ? { reference: { contains: search } } : {}),
+        ...(dateFrom ? { date: { gte: new Date(dateFrom) } } : {}),
+        ...(dateTo ? { date: { lte: new Date(dateTo) } } : {})
       }
       let orderBy = {}
       if (sortBy === 'category') {
-        orderBy = {
-          category: {
-            name: sortOrder
-          }
-        }
+        orderBy = { category: { name: sortOrder }}
       } else if (sortBy) {
-        orderBy = {
-            [sortBy]: sortOrder
-        }
+        orderBy = { [sortBy]: sortOrder }
       }
 
       return context.prisma.transaction.findMany({
-        take: limit,
+        take: limit || 200,
         skip: 1,
-        ...(cursorId ? { cursor: {
-            id: cursorId,
-          }} : {}),
+        ...(cursorId ? { cursor: { id: cursorId } } : {}),
         where,
         include: {
           account: true,
@@ -45,12 +37,12 @@ const resolvers: Resolvers = {
     },
     banks: () => context.prisma.bank.findMany(),
     categories: () => context.prisma.category.findMany(),
-    totalTransactionsCount: (_parent, { accountId, search}) => {
+    totalTransactionsCount: (_parent, { accountId, search, dateFrom, dateTo}) => {
       const where = {
         ...(accountId ?  { accountId } : {}),
-        ...(search ? { reference: {
-            contains: search
-          } } : {})
+        ...(search ? { reference: { contains: search } } : {}),
+        ...(dateFrom ? { date: { gte: new Date(dateFrom) } } : {}),
+        ...(dateTo ? { date: { lte: new Date(dateTo) } } : {})
       }
 
       return context.prisma.transaction.count({ where });

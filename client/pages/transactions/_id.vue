@@ -5,11 +5,14 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   async asyncData({ params: { id } }) {
+    console.log(id);
     return { id }
   }
-}
+})
 </script>
 
 <style></style>

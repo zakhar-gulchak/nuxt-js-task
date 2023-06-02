@@ -136,18 +136,14 @@ export type QueryAccountsArgs = {
 
 export type QueryTotalTransactionsCountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
+  dateFrom?: InputMaybe<Scalars['DateTime']>;
+  dateTo?: InputMaybe<Scalars['DateTime']>;
   search?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryTransactionsArgs = {
-  accountId?: InputMaybe<Scalars['ID']>;
-  bankId?: InputMaybe<Scalars['ID']>;
-  cursorId?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  search?: InputMaybe<Scalars['String']>;
-  sortBy?: InputMaybe<Scalars['String']>;
-  sortOrder?: InputMaybe<Sort>;
+  transactionsInput: TransactionsQueryInput;
 };
 
 export type Sort =
@@ -163,6 +159,18 @@ export type Transaction = {
   date: Scalars['DateTime'];
   id: Scalars['ID'];
   reference: Scalars['String'];
+};
+
+export type TransactionsQueryInput = {
+  accountId?: InputMaybe<Scalars['ID']>;
+  bankId?: InputMaybe<Scalars['ID']>;
+  cursorId?: InputMaybe<Scalars['ID']>;
+  dateFrom?: InputMaybe<Scalars['DateTime']>;
+  dateTo?: InputMaybe<Scalars['DateTime']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
+  sortBy?: InputMaybe<Scalars['String']>;
+  sortOrder?: InputMaybe<Sort>;
 };
 
 
@@ -255,6 +263,7 @@ export type ResolversTypes = {
   Sort: Sort;
   String: ResolverTypeWrapper<Scalars['String']>;
   Transaction: ResolverTypeWrapper<Transaction>;
+  TransactionsQueryInput: TransactionsQueryInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -276,6 +285,7 @@ export type ResolversParentTypes = {
   Query: {};
   String: Scalars['String'];
   Transaction: Transaction;
+  TransactionsQueryInput: TransactionsQueryInput;
 };
 
 export type AccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account']> = {
@@ -357,7 +367,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   banks?: Resolver<Array<ResolversTypes['Bank']>, ParentType, ContextType>;
   categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
   totalTransactionsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<QueryTotalTransactionsCountArgs>>;
-  transactions?: Resolver<Array<ResolversTypes['Transaction']>, ParentType, ContextType, RequireFields<QueryTransactionsArgs, 'limit'>>;
+  transactions?: Resolver<Array<ResolversTypes['Transaction']>, ParentType, ContextType, RequireFields<QueryTransactionsArgs, 'transactionsInput'>>;
 };
 
 export type TransactionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Transaction'] = ResolversParentTypes['Transaction']> = {

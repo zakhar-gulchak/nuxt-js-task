@@ -1,9 +1,21 @@
 type Query {
-  transactions (cursorId: ID, limit: Int = 200, sortBy: String, sortOrder: Sort, accountId: ID, bankId: ID, search: String): [Transaction!]!
-  totalTransactionsCount(accountId: ID, search: String): Int!
+  transactions (transactionsInput: TransactionsQueryInput!): [Transaction!]!
+  totalTransactionsCount(accountId: ID, search: String, dateFrom: DateTime, dateTo: DateTime): Int!
   accounts (bankId: ID): [Account!]!
   banks: [Bank!]!
   categories: [Category!]!
+}
+
+input TransactionsQueryInput {
+  cursorId: ID
+  limit: Int
+  sortBy: String
+  sortOrder: Sort
+  accountId: ID
+  bankId: ID
+  search: String
+  dateFrom: DateTime
+  dateTo: DateTime
 }
 
 type Transaction {

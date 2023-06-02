@@ -4,27 +4,27 @@
     <FilterBar :accounts="accounts" :reset-account-label="resetAccountLabel" :banks="banks" :selected-bank-id="selectedBankId" :selected-account-id="selectedAccountId" :filters-change="filtersChange"/>
     <div class="relative">
       <table class="table-fixed w-full">
-        <thead class="table-header-group">
-          <tr class="table-row">
-            <th class="table-cell text-left font-normal border-y border-slate-200 py-4 text-slate-400 w-1/2">
+        <thead class="block">
+          <tr class="flex">
+            <th class="block text-left font-normal border-y border-slate-200 py-4 text-slate-400 w-1/2">
               <span class="cursor-pointer select-none inline-block" @click="setSortBy('reference')">Reference</span>
               <client-only>
                 <IconSort v-if="queryParameters.sortBy === 'reference'" :direction="queryParameters.sortOrder" />
               </client-only>
             </th>
-            <th class="table-cell text-left font-normal border-y border-slate-200 py-4 text-slate-400">
+            <th class="block text-left font-normal border-y border-slate-200 py-4 text-slate-400 w-2/6">
               <span class="cursor-pointer select-none inline-block" @click="setSortBy('category')">Category</span>
               <client-only>
                 <IconSort v-if="queryParameters.sortBy === 'category'" :direction="queryParameters.sortOrder" />
               </client-only>
             </th>
-            <th class="table-cell text-left font-normal border-y border-slate-200 py-4 text-slate-400 w-20">
+            <th class="block text-left font-normal border-y border-slate-200 py-4 text-slate-400 w-1/12">
               <span class="cursor-pointer select-none inline-block" @click="setSortBy('date')">Date</span>
               <client-only>
                 <IconSort v-if="queryParameters.sortBy === 'date'" :direction="queryParameters.sortOrder" />
               </client-only>
             </th>
-            <th class="table-cell text-right font-normal border-y border-slate-200 py-4 text-slate-400 w-32">
+            <th class="block text-right font-normal border-y border-slate-200 py-4 text-slate-400 w-1/12">
               <client-only>
                 <IconSort v-if="queryParameters.sortBy === 'amount'" :direction="queryParameters.sortOrder" />
               </client-only>
@@ -32,25 +32,25 @@
             </th>
           </tr>
         </thead>
-        <tbody class="table-row-group">
+        <tbody class="block overflow-y-scroll" :style="{ width: 'calc(100vw - 3rem)', height: 'calc(100vh - 14rem)'}">
           <tr v-if="$apollo.queries.transactions.loading && !transactions">
             <td>
               <div>Loading...</div>
             </td>
           </tr>
-          <tr :class="`table-row ${index === transactions.length - 10 ? 'observing' : ''}`" v-for="(item, index) in transactions" :key="item.id">
-            <td :class="`table-cell py-3 border-y border-slate-100${item.reference ? '' : ' text-slate-300'}`">
+          <tr :class="`flex ${index === transactions.length - 10 ? 'observing' : ''}`" v-for="(item, index) in transactions" :key="item.id">
+            <td :class="`block py-3 border-y w-1/2 border-slate-100${item.reference ? '' : ' text-slate-300'}`">
               <nuxt-link :to="`/transactions/${item.id}`">{{ item.reference || 'No reference provided' }}</nuxt-link>
             </td>
-            <td class="table-cell border-y border-slate-100 content-start">
+            <td class="table-cell border-y border-slate-100 content-start w-2/6">
               <Tag
                 v-if="item.category?.name"
                 :name="item.category?.name"
                 :color="item.category?.color"
               />
             </td>
-            <td class="table-cell border-y border-slate-100">{{ format(new Date(item.date), 'MM/dd/yy') }}</td>
-            <td class="table-cell border-y border-slate-100 text-right">
+            <td class="table-cell border-y border-slate-100 w-1/12">{{ format(new Date(item.date), 'MM/dd/yy') }}</td>
+            <td class="table-cell border-y border-slate-100 text-right w-1/12">
               {{ item.amount.toFixed(2) }}
               <span class="text-slate-400">{{ item.currency }}</span>
             </td>
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { format } from 'date-fns'
+import { format, lastDayOfMonth } from 'date-fns'
 import { nextTick } from 'vue'
 import Tag from '@/components/atoms/Tag.vue'
 import IconSort from '@/components/atoms/IconSort.vue';
@@ -97,6 +97,8 @@ export default {
           sortBy: this.queryParameters.sortBy,
           sortOrder: this.queryParameters.sortOrder,
           search: this.searchText,
+          dateFrom: this.dateFrom ? `${this.dateFrom}-01` : null,
+          dateTo: this.dateTo ? format(lastDayOfMonth(new Date(`${this.dateTo}-01`)), 'yyyy-MM-dd') : null,
         };
       },
       result({ data }) {
@@ -132,6 +134,8 @@ export default {
         return {
           accountId: this.queryParameters.accountId,
           search: this.queryParameters.search,
+          dateFrom: this.dateFrom ? `${this.dateFrom}-01` : null,
+          dateTo: this.dateTo ? format(lastDayOfMonth(new Date(`${this.dateTo}-01`)), 'yyyy-MM-dd') : null,
         };
       }
     },
@@ -149,6 +153,8 @@ export default {
       selectedAccountId: null,
       resetAccountLabel: false,
       searchText: '',
+      dateFrom: '',
+      dateTo: '',
       totalTransactionsCount: 0,
       isClient: false,
       observer: null,
@@ -217,6 +223,12 @@ export default {
           if (!this.selectedBankId) {
             this.selectedBankId = this.accounts.find(account => account.id === value).bank.id;
           }
+          break;
+        case 'dateFrom':
+          this.dateFrom = value;
+          break;
+        case 'dateTo':
+          this.dateTo = value;
           break;
         case 'search':
           this.searchText = value;
