@@ -104,22 +104,23 @@ export default {
           this.cursorId = data.transactions.at(-1).id;
           nextTick(() => {
             this.observer?.disconnect();
-            this.observer?.observe(document.querySelector(".observing"));
+            const observingElement = document.querySelector(".observing");
+            observingElement && this.observer?.observe(observingElement);
           })
         }
       },
     },
     accounts: {
-      prefetch: false,
+      prefetch: true,
       query: getAccounts,
-      skip() {
-        return !this.selectedBankId;
-      },
       variables() {
         return {
           bankId: this.selectedBankId
         };
       },
+      skip() {
+        return !this.skipAccountsRefetching;
+      }
     },
     banks: () => {
       return {
@@ -149,6 +150,7 @@ export default {
       banks: [],
       selectedBankId: null,
       selectedAccountId: null,
+      skipAccountsRefetching: false,
       resetAccountLabel: false,
       searchText: '',
       totalTransactionsCount: 0,
@@ -206,16 +208,25 @@ export default {
         }
       })
     },
-    filtersChange(diff) {
-      if (diff.bankId) {
-        this.selectedBankId = diff.bankId;
-        this.selectedAccountId = null;
-        this.resetAccountLabel = true; // trigger account dropdown label clearance
-      } else if (diff.accountId) {
-        this.selectedAccountId = diff.accountId;
-        this.resetAccountLabel = false; // to make possible triggering it back
-      } else if (diff.search) {
-        this.searchText = diff.search;
+    filtersChange(key, value) {
+      switch (key) {
+        case 'bankId':
+          this.skipAccountsRefetching = false;
+          this.selectedBankId = value;
+          this.selectedAccountId = null;
+          this.resetAccountLabel = true; // trigger account dropdown label clearance
+          break;
+        case 'accountId':
+          this.selectedAccountId = value;
+          this.resetAccountLabel = false; // to make possible triggering it back
+          if (!this.selectedBankId) {
+            this.skipAccountsRefetching = true;
+            this.selectedBankId = this.accounts.find(account => account.id === value).bank.id;
+          }
+          break;
+        case 'search':
+          this.searchText = value;
+          break;
       }
     },
   }

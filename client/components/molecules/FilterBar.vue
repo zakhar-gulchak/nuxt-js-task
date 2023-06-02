@@ -14,10 +14,10 @@
         </div>
       </div>
       <div class="md:col-span-2">
-        <Dropdown label="Bank" :values="banks" field-name="name" placeholder="No filter applied" :on-select="onBankSelect"/>
+        <Dropdown label="Bank" :values="banks" field-name="name" placeholder="No filter applied" :on-select="(val) => filtersChange('bankId', val)"/>
       </div>
       <div class="md:col-span-2">
-        <Dropdown label="Account" :values="accounts" :reset-value-label="resetAccountLabel" field-name="name" placeholder="No filter applied" :on-select="onAccountSelect"/>
+        <Dropdown label="Account" :values="accounts" :reset-value-label="resetAccountLabel" field-name="name" placeholder="No filter applied" :on-select="(val) => filtersChange('accountId', val)"/>
       </div>
       <div>
         <label for="starting_month" class="block mb-2 text-xs font-light text-gray-900 dark:text-white">Start</label>
@@ -63,15 +63,9 @@ export default defineComponent({
     return { searchText };
   },
   methods: {
-    onBankSelect(bankId) {
-      this.filtersChange({ bankId })
-    },
-    onAccountSelect(accountId) {
-      this.filtersChange({ accountId })
-    },
     onSearchTextChange(event) {
       this.searchText = event.target.value
-      this.filtersChange({ search: this.searchText });
+      this.filtersChange('search', this.searchText);
     },
   }
 })
