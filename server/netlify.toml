@@ -3,4 +3,4 @@
   functions = "src" # netlify-lambda builds to this folder AND Netlify reads functions from here
   publish = "server/static"
 [functions]
-  external_node_modules = [express]
+  external_node_modules = ['express']
