@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+// @ts-ignore
 import { Account, Bank, Transaction } from '.prisma/client';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
