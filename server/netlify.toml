@@ -1,4 +1,4 @@
 [build]
-  command = "yarn build:lambda" # the command you run to build this file
-  functions = "built-lambda" # netlify-lambda builds to this folder AND Netlify reads functions from here
+  command = "yarn build:server" # the command you run to build this file
+  functions = "dist" # netlify-lambda builds to this folder AND Netlify reads functions from here
   publish = "static"
