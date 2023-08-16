@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Test assignment",
   "main": "index.js",
-  "engines": {
-    "node": ">=16.0.0 <17.0.0"
-  },
   "scripts": {
     "start": "npm start:client && npm start:server",
     "start:client": "cd client && npm start",
