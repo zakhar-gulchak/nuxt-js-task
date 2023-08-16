@@ -6,72 +6,74 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  DateTime: any;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
 };
 
 export type Account = {
   __typename?: 'Account';
   bank?: Maybe<Bank>;
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type AddAccountMutationResponse = MutationResponse & {
   __typename?: 'AddAccountMutationResponse';
   account?: Maybe<Account>;
-  code: Scalars['String'];
-  message: Scalars['String'];
-  success: Scalars['Boolean'];
+  code: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type AddBankMutationResponse = MutationResponse & {
   __typename?: 'AddBankMutationResponse';
   bank?: Maybe<Bank>;
-  code: Scalars['String'];
-  message: Scalars['String'];
-  success: Scalars['Boolean'];
+  code: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type AddCategoryMutationResponse = MutationResponse & {
   __typename?: 'AddCategoryMutationResponse';
   category?: Maybe<Category>;
-  code: Scalars['String'];
-  message: Scalars['String'];
-  success: Scalars['Boolean'];
+  code: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type AddTransactionMutationResponse = MutationResponse & {
   __typename?: 'AddTransactionMutationResponse';
-  code: Scalars['String'];
-  message: Scalars['String'];
-  success: Scalars['Boolean'];
+  code: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
   transaction?: Maybe<Transaction>;
 };
 
 export type Bank = {
   __typename?: 'Bank';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type Category = {
   __typename?: 'Category';
-  color: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  color: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type Currency =
@@ -89,34 +91,34 @@ export type Mutation = {
 
 
 export type MutationAddAccountArgs = {
-  bankId?: InputMaybe<Scalars['ID']>;
-  name?: InputMaybe<Scalars['String']>;
+  bankId?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationAddBankArgs = {
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationAddCategoryArgs = {
-  color?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationAddTransactionArgs = {
-  account?: InputMaybe<Scalars['ID']>;
-  amount?: InputMaybe<Scalars['Float']>;
-  category?: InputMaybe<Scalars['ID']>;
+  account?: InputMaybe<Scalars['ID']['input']>;
+  amount?: InputMaybe<Scalars['Float']['input']>;
+  category?: InputMaybe<Scalars['ID']['input']>;
   currency?: InputMaybe<Currency>;
-  reference?: InputMaybe<Scalars['String']>;
+  reference?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MutationResponse = {
-  code: Scalars['String'];
-  message: Scalars['String'];
-  success: Scalars['Boolean'];
+  code: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type Query = {
@@ -124,21 +126,21 @@ export type Query = {
   accounts: Array<Account>;
   banks: Array<Bank>;
   categories: Array<Category>;
-  totalTransactionsCount: Scalars['Int'];
+  totalTransactionsCount: Scalars['Int']['output'];
   transactions: Array<Transaction>;
 };
 
 
 export type QueryAccountsArgs = {
-  bankId?: InputMaybe<Scalars['ID']>;
+  bankId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type QueryTotalTransactionsCountArgs = {
-  accountId?: InputMaybe<Scalars['ID']>;
-  dateFrom?: InputMaybe<Scalars['DateTime']>;
-  dateTo?: InputMaybe<Scalars['DateTime']>;
-  search?: InputMaybe<Scalars['String']>;
+  accountId?: InputMaybe<Scalars['ID']['input']>;
+  dateFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  dateTo?: InputMaybe<Scalars['DateTime']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -153,23 +155,23 @@ export type Sort =
 export type Transaction = {
   __typename?: 'Transaction';
   account?: Maybe<Account>;
-  amount: Scalars['Float'];
+  amount: Scalars['Float']['output'];
   category?: Maybe<Category>;
   currency: Currency;
-  date: Scalars['DateTime'];
-  id: Scalars['ID'];
-  reference: Scalars['String'];
+  date: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  reference: Scalars['String']['output'];
 };
 
 export type TransactionsQueryInput = {
-  accountId?: InputMaybe<Scalars['ID']>;
-  bankId?: InputMaybe<Scalars['ID']>;
-  cursorId?: InputMaybe<Scalars['ID']>;
-  dateFrom?: InputMaybe<Scalars['DateTime']>;
-  dateTo?: InputMaybe<Scalars['DateTime']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  search?: InputMaybe<Scalars['String']>;
-  sortBy?: InputMaybe<Scalars['String']>;
+  accountId?: InputMaybe<Scalars['ID']['input']>;
+  bankId?: InputMaybe<Scalars['ID']['input']>;
+  cursorId?: InputMaybe<Scalars['ID']['input']>;
+  dateFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  dateTo?: InputMaybe<Scalars['DateTime']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sortBy?: InputMaybe<Scalars['String']['input']>;
   sortOrder?: InputMaybe<Sort>;
 };
 
@@ -241,6 +243,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 
+/** Mapping of interface types */
+export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
+  MutationResponse: ( Omit<AddAccountMutationResponse, 'account'> & { account?: Maybe<RefType['Account']> } ) | ( Omit<AddBankMutationResponse, 'bank'> & { bank?: Maybe<RefType['Bank']> } ) | ( AddCategoryMutationResponse ) | ( Omit<AddTransactionMutationResponse, 'transaction'> & { transaction?: Maybe<RefType['Transaction']> } );
+};
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
@@ -250,18 +256,18 @@ export type ResolversTypes = {
   AddCategoryMutationResponse: ResolverTypeWrapper<AddCategoryMutationResponse>;
   AddTransactionMutationResponse: ResolverTypeWrapper<Omit<AddTransactionMutationResponse, 'transaction'> & { transaction?: Maybe<ResolversTypes['Transaction']> }>;
   Bank: ResolverTypeWrapper<Bank>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Category: ResolverTypeWrapper<Category>;
   Currency: Currency;
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
-  Float: ResolverTypeWrapper<Scalars['Float']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
-  MutationResponse: ResolversTypes['AddAccountMutationResponse'] | ResolversTypes['AddBankMutationResponse'] | ResolversTypes['AddCategoryMutationResponse'] | ResolversTypes['AddTransactionMutationResponse'];
+  MutationResponse: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['MutationResponse']>;
   Query: ResolverTypeWrapper<{}>;
   Sort: Sort;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   Transaction: ResolverTypeWrapper<Transaction>;
   TransactionsQueryInput: TransactionsQueryInput;
 };
@@ -274,16 +280,16 @@ export type ResolversParentTypes = {
   AddCategoryMutationResponse: AddCategoryMutationResponse;
   AddTransactionMutationResponse: Omit<AddTransactionMutationResponse, 'transaction'> & { transaction?: Maybe<ResolversParentTypes['Transaction']> };
   Bank: Bank;
-  Boolean: Scalars['Boolean'];
+  Boolean: Scalars['Boolean']['output'];
   Category: Category;
-  DateTime: Scalars['DateTime'];
-  Float: Scalars['Float'];
-  ID: Scalars['ID'];
-  Int: Scalars['Int'];
+  DateTime: Scalars['DateTime']['output'];
+  Float: Scalars['Float']['output'];
+  ID: Scalars['ID']['output'];
+  Int: Scalars['Int']['output'];
   Mutation: {};
-  MutationResponse: ResolversParentTypes['AddAccountMutationResponse'] | ResolversParentTypes['AddBankMutationResponse'] | ResolversParentTypes['AddCategoryMutationResponse'] | ResolversParentTypes['AddTransactionMutationResponse'];
+  MutationResponse: ResolversInterfaceTypes<ResolversParentTypes>['MutationResponse'];
   Query: {};
-  String: Scalars['String'];
+  String: Scalars['String']['output'];
   Transaction: Transaction;
   TransactionsQueryInput: TransactionsQueryInput;
 };
