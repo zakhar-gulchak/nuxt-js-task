@@ -1,6 +1,7 @@
-import { ApolloServer } from '@apollo/server';
+import { ApolloServer, BaseContext } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { readFileSync } from 'fs';
+import { startServerAndCreateLambdaHandler, handlers } from '@as-integrations/aws-lambda';
 
 import resolvers from './resolvers';
 import { Context, createContext } from './context';
@@ -22,10 +23,14 @@ const start = async () => {
 
 // start();
 
-const createLambdaServer = () => new ApolloServer<Context>({
+const server = new ApolloServer<BaseContext>({
   typeDefs: readFileSync('./src/schema/schema.graphql', { encoding: 'utf-8' }),
   resolvers,
   introspection: process.env.NODE_ENV !== 'production'
 });
 
-export default { createLambdaServer };
+export const graphqlHandler = startServerAndCreateLambdaHandler(
+    server,
+    // We will be using the Proxy V2 handler
+    handlers.createAPIGatewayProxyEventV2RequestHandler(),
+);
