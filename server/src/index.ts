@@ -20,4 +20,4 @@ const start = async () => {
   console.log(`🚀  Server ready at: ${url}`);
 }
 
-start();
+export default { start }
