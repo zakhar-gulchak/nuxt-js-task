@@ -14,7 +14,7 @@
     "clean": "rm -rf dist",
     "generate": "graphql-codegen --config codegen.ts",
     "build": "npm -s run clean && npm -s run generate && tsc",
-    "build:server": "tsc",
+    "build:lambda": "tsc",
     "start": "node ./dist/index.js",
     "start:dev": "netlify dev",
     "prisma:init-db": "npx prisma db push",

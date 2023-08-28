@@ -1,9 +1,5 @@
-const { start } = require("./bundle/index")
+const { createLambdaServer } = require("./bundle/index")
 
-const graphQLServer = start();
+const graphQLServer = createLambdaServer();
 
-exports.handler = graphQLServer.createHandler({
-  cors: {
-    origin: '*'
-  }
-});
+exports.handler = graphQLServer;

@@ -20,4 +20,10 @@ const start = async () => {
     });
     console.log(`🚀  Server ready at: ${url}`);
 };
-exports.default = { start };
+// start();
+const createLambdaServer = () => new server_1.ApolloServer({
+    typeDefs: (0, fs_1.readFileSync)('./src/schema/schema.graphql', { encoding: 'utf-8' }),
+    resolvers: resolvers_1.default,
+    introspection: process.env.NODE_ENV !== 'production'
+});
+exports.default = { createLambdaServer };
