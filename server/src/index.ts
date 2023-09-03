@@ -25,7 +25,7 @@ import resolvers from './resolvers';
 // start();
 
 export const server = new ApolloServer({
-  typeDefs: readFileSync('./src/schema/schema.graphql', { encoding: 'utf-8' }),
+  typeDefs: readFileSync('src/schema/schema.graphql', { encoding: 'utf-8' }),
   resolvers,
   introspection: process.env.NODE_ENV !== 'production'
 });
