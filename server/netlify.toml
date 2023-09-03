@@ -2,6 +2,8 @@
   command = "" # the command you run to build this file
   functions = "functions" # netlify-lambda builds to this folder AND Netlify reads functions from here
   publish = "static"
+[functions]
+  included_files = ["src/schema/**"]
 [dev]
   functions = "functions"
   functionsPort = 3001
