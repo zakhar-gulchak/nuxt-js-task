@@ -3,6 +3,7 @@
   functions = "functions" # netlify-lambda builds to this folder AND Netlify reads functions from here
   publish = "static"
 [functions]
+  node_bundler = "esbuild"
   included_files = ["src/schema/**"]
 [dev]
   functions = "functions"
