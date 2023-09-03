@@ -1,7 +1,7 @@
 // import { BaseContext } from '@apollo/server';
 import { ApolloServer } from "apollo-server-lambda";
 // import { startStandaloneServer } from '@apollo/server/standalone';
-import { readFileSync } from 'fs';
+// import { readFileSync } from 'fs';
 // import { startServerAndCreateLambdaHandler, handlers } from '@as-integrations/aws-lambda';
 
 import resolvers from './resolvers';
@@ -24,8 +24,8 @@ import resolvers from './resolvers';
 
 // start();
 
-export const server = new ApolloServer({
-  typeDefs: readFileSync('./src/schema/schema.graphql', { encoding: 'utf-8' }),
+export const createServer = (typeDefs) => new ApolloServer({
+  typeDefs,
   resolvers,
   introspection: process.env.NODE_ENV !== 'production'
 });
