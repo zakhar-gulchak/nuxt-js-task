@@ -9,4 +9,4 @@ const handler = (event, context) => {
     return graphqlHandler(event, context);
 }
 
-export default { handler }
+export { handler }
