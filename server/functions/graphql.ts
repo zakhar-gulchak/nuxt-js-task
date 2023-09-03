@@ -1,8 +1,10 @@
 import { createServer } from '../src'
+import { resolve } from 'path'
 import { readFileSync } from "fs"
 
 const handler = (event, context) => {
-  const typeDefs = readFileSync('./src/schema/schema.graphql', { encoding: 'utf-8' });
+  const pathName = resolve("./src/schema/schema.graphql");
+  const typeDefs = readFileSync(pathName, { encoding: 'utf-8' });
   const server = createServer(typeDefs);
   const graphqlHandler = server.createHandler();
   if (!event.requestContext) {
