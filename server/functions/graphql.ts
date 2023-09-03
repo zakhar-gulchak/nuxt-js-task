@@ -1,7 +1,6 @@
 import { server } from '../src'
 
-export default (event, context) => {
-    console.log(event, context)
+const handler = (event, context) => {
     const graphqlHandler = server.createHandler();
     if (!event.requestContext) {
         event.requestContext = context;
@@ -9,3 +8,5 @@ export default (event, context) => {
 
     return graphqlHandler(event, context);
 }
+
+export default { handler }

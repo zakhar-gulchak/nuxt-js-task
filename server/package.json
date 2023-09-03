@@ -16,6 +16,7 @@
     "build": "npm -s run clean && npm -s run generate && tsc",
     "build:lambda": "tsc",
     "start": "node ./dist/index.js",
+    "start:debug": "NODE_OPTIONS=--inspect netlify dev",
     "start:dev": "netlify dev",
     "prisma:init-db": "npx prisma db push",
     "prisma:migrate": "npx prisma migrate dev",
