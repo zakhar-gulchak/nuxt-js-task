@@ -4,7 +4,6 @@
   publish = "static"
 [functions]
   node_bundler = "esbuild"
-  included_files = ["src/schema/schema.graphql"]
 [dev]
   functions = "functions"
   functionsPort = 3001
