@@ -1,37 +1,32 @@
-// import { BaseContext } from '@apollo/server';
-import { ApolloServer } from "apollo-server-lambda";
-// import { startStandaloneServer } from '@apollo/server/standalone';
-// import { readFileSync } from 'fs';
-// import { startServerAndCreateLambdaHandler, handlers } from '@as-integrations/aws-lambda';
+import { ApolloServer } from '@apollo/server';
+import { ApolloServer as ApolloServerLambda } from "apollo-server-lambda";
+import { startStandaloneServer } from '@apollo/server/standalone';
+import { readFileSync } from 'fs';
 
 import resolvers from './resolvers';
-// import { Context, createContext } from './context';
-//
-// const start = async () => {
-//   const server = new ApolloServer<Context>({
-//     typeDefs: readFileSync('./src/schema/schema.graphql', { encoding: 'utf-8' }),
-//     resolvers,
-//     introspection: process.env.NODE_ENV !== 'production'
-//   });
-//
-//   const { url } = await startStandaloneServer(server, {
-//     context: createContext,
-//     listen: { port: Number(process.env.PORT) || 4000 }
-//   });
-//
-//   console.log(`🚀  Server ready at: ${url}`);
-// }
+import { Context, createContext } from './context';
 
-// start();
+const start = async () => {
+  const server = new ApolloServer<Context>({
+    typeDefs: readFileSync('./src/schema/schema.graphql', { encoding: 'utf-8' }),
+    resolvers,
+    introspection: process.env.NODE_ENV !== 'production'
+  });
 
-export const createServer = (typeDefs) => new ApolloServer({
+  const { url } = await startStandaloneServer(server, {
+    context: createContext,
+    listen: { port: Number(process.env.PORT) || 4000 }
+  });
+
+  console.log(`🚀  Server ready at: ${url}`);
+}
+
+if (process.env.NODE_ENV !== 'production') { // todo: check if running not as a function instead
+  start();
+}
+
+export const createServer = (typeDefs: any) => new ApolloServerLambda({
   typeDefs,
   resolvers,
   introspection: process.env.NODE_ENV !== 'production'
 });
-
-// export const graphqlHandler = startServerAndCreateLambdaHandler(
-//     createServer(),
-//     // We will be using the Proxy V2 handler
-//     handlers.createAPIGatewayProxyEventV2RequestHandler(),
-// );
