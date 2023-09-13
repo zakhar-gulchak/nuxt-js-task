@@ -33,11 +33,13 @@
           </tr>
         </thead>
         <tbody class="block overflow-y-scroll" :style="{ width: 'calc(100vw - 3rem)', height: 'calc(100vh - 14rem)'}">
-          <tr v-if="$apollo.queries.transactions.loading && !transactions">
-            <td>
-              <div>Loading...</div>
-            </td>
-          </tr>
+          <client-only>
+            <tr v-if="$apollo.queries.transactions.loading && !transactions">
+              <td>
+                <div>Loading...</div>
+              </td>
+            </tr>
+          </client-only>
           <tr :class="`flex ${index === transactions.length - 10 ? 'observing' : ''}`" v-for="(item, index) in transactions" :key="item.id">
             <td :class="`block py-3 border-y w-1/2 border-slate-100${item.reference ? '' : ' text-slate-300'}`">
               <nuxt-link :to="`/transactions/${item.id}`">{{ item.reference || 'No reference provided' }}</nuxt-link>
