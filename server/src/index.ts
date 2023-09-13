@@ -21,7 +21,7 @@ const start = async () => {
   console.log(`🚀  Server ready at: ${url}`);
 }
 
-if (process.env.NODE_ENV !== 'production') { // todo: check if running not as a function instead
+if (process.env.ENV === 'service') { // todo: check if running not as a function instead
   start();
 }
 
