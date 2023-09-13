@@ -48,14 +48,15 @@ const resolvers: Resolvers = {
       return context.prisma.transaction.count({ where });
     },
   },
-  Account: {
-    bank: (parent, _args, context: Context) => {
-      return context.prisma.bank
-        .findUnique({
-          where: { id: parent?.bankId },
-        })
-    }
-  },
+  // todo: find out why I need this
+  // Account: {
+  //   bank: (parent, _args, context: Context) => {
+  //     return context.prisma.bank
+  //       .findUnique({
+  //         where: { id: parent?.bankId },
+  //       })
+  //   }
+  // },
 };
 
 export default resolvers;
