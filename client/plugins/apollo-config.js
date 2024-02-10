@@ -5,11 +5,6 @@ export default function ({ $config: { baseUrl } }) {
 
   return {
     httpEndpoint: baseUrl,
-    httpLinkOptions: {
-      headers:{
-        Refferer: baseUrl,
-      }
-    },
     resolvers: {
       Mutation: {
         queryParametersSet: (root, { sortBy, sortOrder }, { cache }) => {
